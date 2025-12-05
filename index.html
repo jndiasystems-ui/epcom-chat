@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Epcom - Asistente Virtual</title>
     <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,9 +17,10 @@
 
         html {
             height: 100%;
-            overflow: hidden;
-            position: fixed;
             width: 100%;
+            overflow: hidden !important;
+            position: fixed;
+            touch-action: none;
         }
 
         body {
@@ -27,21 +28,18 @@
             background: linear-gradient(135deg, #0a1628 0%, #0f2942 50%, #1a3a52 100%);
             height: 100vh;
             width: 100vw;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            overflow: hidden;
+            overflow: hidden !important;
+            touch-action: none;
         }
 
         body::before {
             content: '';
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
@@ -52,6 +50,7 @@
             background-size: 50px 50px;
             pointer-events: none;
             animation: gridMove 20s linear infinite;
+            z-index: 0;
         }
 
         @keyframes gridMove {
@@ -60,7 +59,7 @@
         }
 
         .orb {
-            position: absolute;
+            position: fixed;
             border-radius: 50%;
             filter: blur(100px);
             opacity: 0.15;
@@ -112,14 +111,17 @@
                 0 20px 60px rgba(0, 0, 0, 0.6),
                 0 0 100px rgba(37, 99, 235, 0.1),
                 inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            width: 100%;
-            max-width: 480px;
+            width: 480px;
+            max-width: calc(100vw - 40px);
             height: 750px;
-            max-height: 90vh;
+            max-height: calc(100vh - 40px);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            position: relative;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             z-index: 10;
         }
 
@@ -252,18 +254,20 @@
             display: flex;
             flex-direction: column;
             min-height: 0;
+            touch-action: auto;
         }
 
         @media (max-width: 500px) {
-            body {
-                padding: 0;
-            }
-
             .container {
                 border-radius: 0;
+                width: 100vw;
                 height: 100vh;
+                max-width: 100vw;
                 max-height: 100vh;
                 border: none;
+                top: 0;
+                left: 0;
+                transform: none;
             }
 
             .header {
@@ -278,11 +282,11 @@
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translate(-50%, calc(-50% + 10px));
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translate(-50%, -50%);
             }
         }
 
@@ -342,6 +346,16 @@
                 },
             },
             enableStreaming: false,
+        });
+
+        document.body.addEventListener('touchmove', function(e) {
+            if (!e.target.closest('.chat-wrapper')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        window.addEventListener('scroll', function(e) {
+            window.scrollTo(0, 0);
         });
     </script>
 </body>
