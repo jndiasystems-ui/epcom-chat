@@ -15,14 +15,18 @@
             box-sizing: border-box;
         }
 
-        html, body {
+        html {
             height: 100%;
             overflow: hidden;
+            position: fixed;
+            width: 100%;
         }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #0a1628 0%, #0f2942 50%, #1a3a52 100%);
+            height: 100vh;
+            width: 100vw;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -32,6 +36,7 @@
             left: 0;
             right: 0;
             bottom: 0;
+            overflow: hidden;
         }
 
         body::before {
@@ -341,3 +346,20 @@
     </script>
 </body>
 </html>
+```
+
+4. Scroll hasta abajo y click en **"Commit changes"**
+
+---
+
+## 🔑 **Cambios clave:**
+
+1. `html { position: fixed; overflow: hidden; }` - Evita scroll en el HTML
+2. `body { position: fixed; overflow: hidden; }` - Bloquea el scroll del body
+3. El contenedor mantiene su altura fija y no se mueve
+
+---
+
+Espera 2 minutos para que se actualice y prueba de nuevo el link:
+```
+https://jndiasystems-ui.github.io/epcom-chat/
