@@ -257,6 +257,25 @@
             touch-action: auto;
         }
 
+        /* ✨ ESTILOS PARA ENLACES CLICKEABLES ✨ */
+        .chat-wrapper a.auto-link {
+            color: #3b82f6 !important;
+            text-decoration: underline !important;
+            font-weight: 500 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            word-break: break-all !important;
+        }
+
+        .chat-wrapper a.auto-link:hover {
+            color: #60a5fa !important;
+            text-decoration: none !important;
+        }
+
+        .chat-wrapper a.auto-link:active {
+            color: #2563eb !important;
+        }
+
         @media (max-width: 500px) {
             .container {
                 border-radius: 0;
@@ -348,6 +367,100 @@
             enableStreaming: false,
         });
 
+        // 🔗 SISTEMA DE AUTO-DETECCIÓN Y CONVERSIÓN DE URLs A ENLACES CLICKEABLES
+        function makeLinksClickable() {
+            // Patrón regex para detectar URLs (http, https, www)
+            const urlPattern = /(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
+            
+            // Encontrar todos los mensajes del chat
+            const messages = document.querySelectorAll('.chat-wrapper [class*="message"]');
+            
+            messages.forEach(messageElement => {
+                // Evitar procesar el mismo mensaje múltiples veces
+                if (messageElement.hasAttribute('data-links-processed')) {
+                    return;
+                }
+                
+                // Buscar todos los nodos de texto dentro del mensaje
+                const walker = document.createTreeWalker(
+                    messageElement,
+                    NodeFilter.SHOW_TEXT,
+                    {
+                        acceptNode: function(node) {
+                            // Solo procesar nodos de texto que no estén dentro de un enlace
+                            return node.parentElement.tagName !== 'A' 
+                                ? NodeFilter.FILTER_ACCEPT 
+                                : NodeFilter.FILTER_REJECT;
+                        }
+                    }
+                );
+                
+                const textNodes = [];
+                let currentNode;
+                
+                while (currentNode = walker.nextNode()) {
+                    textNodes.push(currentNode);
+                }
+                
+                // Procesar cada nodo de texto
+                textNodes.forEach(textNode => {
+                    const text = textNode.textContent;
+                    
+                    // Si el texto contiene URLs
+                    if (urlPattern.test(text)) {
+                        // Crear un fragmento temporal con HTML
+                        const span = document.createElement('span');
+                        
+                        // Reemplazar URLs por enlaces <a>
+                        span.innerHTML = text.replace(urlPattern, (url) => {
+                            // Asegurar que la URL tenga protocolo
+                            let href = url;
+                            if (url.startsWith('www.')) {
+                                href = 'https://' + url;
+                            }
+                            
+                            return `<a href="${href}" class="auto-link" target="_blank" rel="noopener noreferrer">${url}</a>`;
+                        });
+                        
+                        // Reemplazar el nodo de texto con el nuevo contenido
+                        textNode.parentNode.replaceChild(span, textNode);
+                        
+                        // Desempaquetar el span para que los enlaces queden directamente en el mensaje
+                        while (span.firstChild) {
+                            span.parentNode.insertBefore(span.firstChild, span);
+                        }
+                        span.remove();
+                    }
+                });
+                
+                // Marcar el mensaje como procesado
+                messageElement.setAttribute('data-links-processed', 'true');
+            });
+        }
+        
+        // 👀 OBSERVADOR DE MUTACIONES: Detecta cuando llegan nuevos mensajes
+        const observer = new MutationObserver(() => {
+            makeLinksClickable();
+        });
+        
+        // Esperar a que el chat se inicialice y comenzar a observar
+        setTimeout(() => {
+            const chatContainer = document.querySelector('.chat-wrapper');
+            
+            if (chatContainer) {
+                // Configurar el observador para detectar cambios en el DOM
+                observer.observe(chatContainer, {
+                    childList: true,      // Detectar cuando se agregan/eliminan elementos
+                    subtree: true,        // Observar todos los descendientes
+                    characterData: true   // Detectar cambios en el contenido de texto
+                });
+                
+                // Procesar mensajes iniciales (si ya existen)
+                makeLinksClickable();
+            }
+        }, 1000);
+
+        // Eventos de scroll y touch (código original)
         document.body.addEventListener('touchmove', function(e) {
             if (!e.target.closest('.chat-wrapper')) {
                 e.preventDefault();
