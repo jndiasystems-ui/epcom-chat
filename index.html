@@ -18,18 +18,18 @@
         html {
             height: 100%;
             width: 100%;
-            /* ✅ CAMBIADO: Removido overflow: hidden y position: fixed */
-            /* ✅ CAMBIADO: Removido touch-action: none */
         }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #0a1628 0%, #0f2942 50%, #1a3a52 100%);
             min-height: 100vh;
+            /* ✅ CRÍTICO: Soporte para iOS */
+            min-height: -webkit-fill-available;
             width: 100vw;
-            /* ✅ CAMBIADO: Removido position: fixed, overflow: hidden, touch-action: none */
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
         }
 
         body::before {
@@ -110,6 +110,8 @@
             max-width: calc(100vw - 40px);
             height: 750px;
             max-height: calc(100vh - 40px);
+            /* ✅ CRÍTICO: Soporte para iOS */
+            max-height: calc(100dvh - 40px);
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -249,7 +251,6 @@
             display: flex;
             flex-direction: column;
             min-height: 0;
-            /* ✅ CAMBIADO: touch-action: auto ya está bien */
             touch-action: auto;
         }
 
@@ -272,7 +273,7 @@
             color: #2563eb !important;
         }
 
-        /* ✅ NUEVO: Asegurar que inputs y textareas funcionen en mobile */
+        /* ✅ Asegurar que inputs funcionen en mobile */
         .chat-wrapper input,
         .chat-wrapper textarea,
         .chat-wrapper [contenteditable] {
@@ -281,32 +282,75 @@
             user-select: auto !important;
         }
 
+        /* ✅ CRÍTICO: Estilos específicos para móvil */
         @media (max-width: 500px) {
+            html {
+                height: 100%;
+                /* ✅ Soporte para iOS */
+                height: -webkit-fill-available;
+            }
+
+            body {
+                position: relative;
+                min-height: 100vh;
+                min-height: -webkit-fill-available;
+            }
+
             .container {
                 border-radius: 0;
                 width: 100vw;
+                width: 100dvw;
                 height: 100vh;
+                height: 100dvh;
+                /* ✅ CRÍTICO: Usar toda la altura disponible en iOS */
+                height: -webkit-fill-available;
                 max-width: 100vw;
                 max-height: 100vh;
+                max-height: 100dvh;
+                max-height: -webkit-fill-available;
                 border: none;
                 top: 0;
                 left: 0;
                 transform: none;
                 position: fixed;
+                margin: 0;
             }
 
             .header {
-                padding: 24px 20px 20px;
+                padding: 20px 16px 16px;
             }
 
             .header h1 {
-                font-size: 24px;
+                font-size: 22px;
             }
 
-            /* ✅ NUEVO: Fix para teclado virtual en iOS */
+            .header p {
+                font-size: 13px;
+                margin-bottom: 8px;
+            }
+
+            .status-badge {
+                font-size: 11px;
+                padding: 6px 12px;
+            }
+
+            .logo {
+                font-size: 30px;
+            }
+        }
+
+        /* ✅ NUEVO: Prevenir bounce en iOS */
+        @supports (-webkit-touch-callout: none) {
             body {
-                position: relative;
-                min-height: -webkit-fill-available;
+                position: fixed;
+                width: 100%;
+                height: 100vh;
+                height: -webkit-fill-available;
+            }
+
+            .container {
+                height: 100vh;
+                height: -webkit-fill-available;
             }
         }
 
@@ -323,6 +367,18 @@
 
         .container {
             animation: fadeIn 0.5s ease-out;
+        }
+
+        /* ✅ NUEVO: Asegurar que en mobile el container use toda la pantalla */
+        @media (max-width: 500px) {
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
         }
     </style>
 </head>
@@ -348,6 +404,16 @@
 
     <script type="module">
         import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+        
+        // ✅ NUEVO: Fix para altura en iOS
+        const setVH = () => {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        };
+        
+        setVH();
+        window.addEventListener('resize', setVH);
+        window.addEventListener('orientationchange', setVH);
         
         createChat({
             webhookUrl: 'https://epcom-colombia-n8n.nr6aco.easypanel.host/webhook/5a676e14-2854-4f37-8383-51d166d4813b/chat',
@@ -379,27 +445,33 @@
             enableStreaming: false,
         });
 
+        // ✅ NUEVO: Scroll al input cuando aparece el teclado (iOS fix)
+        setTimeout(() => {
+            const chatInput = document.querySelector('.chat-wrapper input, .chat-wrapper textarea');
+            if (chatInput) {
+                chatInput.addEventListener('focus', () => {
+                    setTimeout(() => {
+                        chatInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 300);
+                });
+            }
+        }, 2000);
+
         // 🔗 SISTEMA DE AUTO-DETECCIÓN Y CONVERSIÓN DE URLs A ENLACES CLICKEABLES
         function makeLinksClickable() {
-            // Patrón regex para detectar URLs (http, https, www)
             const urlPattern = /(https?:\/\/[^\s]+|www\.[^\s]+)/gi;
-            
-            // Encontrar todos los mensajes del chat
             const messages = document.querySelectorAll('.chat-wrapper [class*="message"]');
             
             messages.forEach(messageElement => {
-                // Evitar procesar el mismo mensaje múltiples veces
                 if (messageElement.hasAttribute('data-links-processed')) {
                     return;
                 }
                 
-                // Buscar todos los nodos de texto dentro del mensaje
                 const walker = document.createTreeWalker(
                     messageElement,
                     NodeFilter.SHOW_TEXT,
                     {
                         acceptNode: function(node) {
-                            // Solo procesar nodos de texto que no estén dentro de un enlace
                             return node.parentElement.tagName !== 'A' 
                                 ? NodeFilter.FILTER_ACCEPT 
                                 : NodeFilter.FILTER_REJECT;
@@ -414,18 +486,13 @@
                     textNodes.push(currentNode);
                 }
                 
-                // Procesar cada nodo de texto
                 textNodes.forEach(textNode => {
                     const text = textNode.textContent;
                     
-                    // Si el texto contiene URLs
                     if (urlPattern.test(text)) {
-                        // Crear un fragmento temporal con HTML
                         const span = document.createElement('span');
                         
-                        // Reemplazar URLs por enlaces <a>
                         span.innerHTML = text.replace(urlPattern, (url) => {
-                            // Asegurar que la URL tenga protocolo
                             let href = url;
                             if (url.startsWith('www.')) {
                                 href = 'https://' + url;
@@ -434,10 +501,8 @@
                             return `<a href="${href}" class="auto-link" target="_blank" rel="noopener noreferrer">${url}</a>`;
                         });
                         
-                        // Reemplazar el nodo de texto con el nuevo contenido
                         textNode.parentNode.replaceChild(span, textNode);
                         
-                        // Desempaquetar el span para que los enlaces queden directamente en el mensaje
                         while (span.firstChild) {
                             span.parentNode.insertBefore(span.firstChild, span);
                         }
@@ -445,53 +510,42 @@
                     }
                 });
                 
-                // Marcar el mensaje como procesado
                 messageElement.setAttribute('data-links-processed', 'true');
             });
         }
         
-        // 👀 OBSERVADOR DE MUTACIONES: Detecta cuando llegan nuevos mensajes
         const observer = new MutationObserver(() => {
             makeLinksClickable();
         });
         
-        // Esperar a que el chat se inicialice y comenzar a observar
         setTimeout(() => {
             const chatContainer = document.querySelector('.chat-wrapper');
             
             if (chatContainer) {
-                // Configurar el observador para detectar cambios en el DOM
                 observer.observe(chatContainer, {
-                    childList: true,      // Detectar cuando se agregan/eliminan elementos
-                    subtree: true,        // Observar todos los descendientes
-                    characterData: true   // Detectar cambios en el contenido de texto
+                    childList: true,
+                    subtree: true,
+                    characterData: true
                 });
                 
-                // Procesar mensajes iniciales (si ya existen)
                 makeLinksClickable();
             }
         }, 1000);
 
-        // ✅ CAMBIADO: Event listener más inteligente que NO bloquea inputs
+        // Event listeners para prevenir scroll del body
         document.body.addEventListener('touchmove', function(e) {
-            // Permitir scroll dentro del chat wrapper
             if (e.target.closest('.chat-wrapper')) {
                 return;
             }
             
-            // Permitir scroll en inputs, textareas y elementos editables
             if (e.target.tagName === 'INPUT' || 
                 e.target.tagName === 'TEXTAREA' || 
                 e.target.isContentEditable) {
                 return;
             }
             
-            // Bloquear scroll en el resto del body
             e.preventDefault();
         }, { passive: false });
-
-        // ✅ CAMBIADO: Removido el window scroll lock que causaba problemas
-        // El scroll del body ahora es manejado por el touchmove listener
     </script>
 </body>
 </html>
