@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Epcom - Asistente Virtual</title>
     <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,23 +18,18 @@
         html {
             height: 100%;
             width: 100%;
-            overflow: hidden !important;
-            position: fixed;
-            touch-action: none;
+            /* ✅ CAMBIADO: Removido overflow: hidden y position: fixed */
+            /* ✅ CAMBIADO: Removido touch-action: none */
         }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #0a1628 0%, #0f2942 50%, #1a3a52 100%);
-            height: 100vh;
+            min-height: 100vh;
             width: 100vw;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            overflow: hidden !important;
-            touch-action: none;
+            /* ✅ CAMBIADO: Removido position: fixed, overflow: hidden, touch-action: none */
+            margin: 0;
+            padding: 0;
         }
 
         body::before {
@@ -254,6 +249,7 @@
             display: flex;
             flex-direction: column;
             min-height: 0;
+            /* ✅ CAMBIADO: touch-action: auto ya está bien */
             touch-action: auto;
         }
 
@@ -276,6 +272,15 @@
             color: #2563eb !important;
         }
 
+        /* ✅ NUEVO: Asegurar que inputs y textareas funcionen en mobile */
+        .chat-wrapper input,
+        .chat-wrapper textarea,
+        .chat-wrapper [contenteditable] {
+            touch-action: manipulation !important;
+            -webkit-user-select: auto !important;
+            user-select: auto !important;
+        }
+
         @media (max-width: 500px) {
             .container {
                 border-radius: 0;
@@ -287,6 +292,7 @@
                 top: 0;
                 left: 0;
                 transform: none;
+                position: fixed;
             }
 
             .header {
@@ -295,6 +301,12 @@
 
             .header h1 {
                 font-size: 24px;
+            }
+
+            /* ✅ NUEVO: Fix para teclado virtual en iOS */
+            body {
+                position: relative;
+                min-height: -webkit-fill-available;
             }
         }
 
@@ -460,16 +472,26 @@
             }
         }, 1000);
 
-        // Eventos de scroll y touch (código original)
+        // ✅ CAMBIADO: Event listener más inteligente que NO bloquea inputs
         document.body.addEventListener('touchmove', function(e) {
-            if (!e.target.closest('.chat-wrapper')) {
-                e.preventDefault();
+            // Permitir scroll dentro del chat wrapper
+            if (e.target.closest('.chat-wrapper')) {
+                return;
             }
+            
+            // Permitir scroll en inputs, textareas y elementos editables
+            if (e.target.tagName === 'INPUT' || 
+                e.target.tagName === 'TEXTAREA' || 
+                e.target.isContentEditable) {
+                return;
+            }
+            
+            // Bloquear scroll en el resto del body
+            e.preventDefault();
         }, { passive: false });
 
-        window.addEventListener('scroll', function(e) {
-            window.scrollTo(0, 0);
-        });
+        // ✅ CAMBIADO: Removido el window scroll lock que causaba problemas
+        // El scroll del body ahora es manejado por el touchmove listener
     </script>
 </body>
 </html>
