@@ -2812,9 +2812,10 @@
                         <span>Accesos Rápidos</span>
                     </div>
                     <button class="widget-config-btn" onclick="window.openWidgetConfig()" title="Personalizar widgets">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="3"></circle>
-                            <path d="M12 1v6m0 6v6m0-12l-4.5-2.5m9 0L12 7m0 10l-4.5 2.5m9 0L12 17M1 12h6m6 0h6m-12 0l-2.5-4.5m0 9L7 12m10 0l2.5-4.5m0 9L17 12"></path>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="6" r="2"/>
+                            <circle cx="12" cy="12" r="2"/>
+                            <circle cx="12" cy="18" r="2"/>
                         </svg>
                     </button>
                 </div>
@@ -3056,27 +3057,27 @@
         // Definición de todos los widgets disponibles
         const AVAILABLE_WIDGETS = [
             // Productividad
-            { id: 'calendar', name: 'Calendario', icon: '📅', desc: 'Eventos de hoy y mañana', category: 'productivity', type: 'internal', active: true },
-            { id: 'contacts', name: 'Contactos', icon: '👥', desc: 'Búsqueda de contactos', category: 'productivity', type: 'internal', active: true },
-            { id: 'reminders', name: 'Recordatorios', icon: '🔔', desc: 'Tus recordatorios', category: 'productivity', type: 'internal', active: true },
-            { id: 'gmail', name: 'Gmail', icon: '📧', desc: 'Acceso rápido a Gmail', category: 'productivity', type: 'external', url: 'https://mail.google.com', active: false },
-            { id: 'tasks', name: 'Google Tasks', icon: '✅', desc: 'Lista de tareas', category: 'productivity', type: 'external', url: 'https://tasks.google.com', active: false },
-            { id: 'keep', name: 'Google Keep', icon: '📝', desc: 'Notas rápidas', category: 'productivity', type: 'external', url: 'https://keep.google.com', active: false },
+            { id: 'calendar', name: 'Calendario', svg: 'M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z', desc: 'Eventos de hoy y mañana', category: 'productivity', type: 'internal', active: true },
+            { id: 'contacts', name: 'Contactos', svg: 'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z', desc: 'Búsqueda de contactos', category: 'productivity', type: 'internal', active: true },
+            { id: 'reminders', name: 'Recordatorios', svg: 'M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z', desc: 'Tus recordatorios', category: 'productivity', type: 'internal', active: true },
+            { id: 'gmail', name: 'Gmail', svg: 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zm16 4l-8 5-8-5v10h16V8zm0-2H4l8 5 8-5z', desc: 'Acceso rápido a Gmail', category: 'productivity', type: 'external', url: 'https://mail.google.com', active: false },
+            { id: 'tasks', name: 'Google Tasks', svg: 'M9 11l12 14 22 4M21 12v7c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h11', desc: 'Lista de tareas', category: 'productivity', type: 'external', url: 'https://tasks.google.com', active: false },
+            { id: 'keep', name: 'Google Keep', svg: 'M3 5v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm16 14H5V5h14v14zm-6-7H9v-2h4V8l3 3-3 3v-2z', desc: 'Notas rápidas', category: 'productivity', type: 'external', url: 'https://keep.google.com', active: false },
             
             // Información
-            { id: 'news', name: 'Noticias', icon: '📰', desc: 'Google News', category: 'information', type: 'external', url: 'https://news.google.com', active: true },
-            { id: 'finance', name: 'Finanzas', icon: '💰', desc: 'Google Finance', category: 'information', type: 'external', url: 'https://www.google.com/finance', active: true },
-            { id: 'weather', name: 'Clima', icon: '🌤️', desc: 'El tiempo en tu zona', category: 'information', type: 'external', url: 'https://weather.com', active: false },
+            { id: 'news', name: 'Noticias', svg: 'M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z', desc: 'Google News', category: 'information', type: 'external', url: 'https://news.google.com', active: true },
+            { id: 'finance', name: 'Finanzas', svg: 'M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z', desc: 'Google Finance', category: 'information', type: 'external', url: 'https://www.google.com/finance', active: true },
+            { id: 'weather', name: 'Clima', svg: 'M12 2c5.5 0 10 4.5 10 10s-4.5 10-10 10S2 17.5 2 12 6.5 2 12 2zm0 18c4.41 0 8-3.59 8-8s-3.59-8-8-8-8 3.59-8 8 3.59 8 8 8zm0-14c-3.31 0-6 2.69-6 6h2c0-2.21 1.79-4 4-4s4 1.79 4 4c0 2.21-1.79 4-4 4v2c3.31 0 6-2.69 6-6s-2.69-6-6-6z', desc: 'El tiempo en tu zona', category: 'information', type: 'external', url: 'https://weather.com', active: false },
             
             // Entretenimiento
-            { id: 'sports', name: 'Fútbol', icon: '⚽', desc: 'OneFootball', category: 'entertainment', type: 'external', url: 'https://onefootball.com/en/home', active: true },
-            { id: 'youtube', name: 'YouTube', icon: '🎬', desc: 'Videos y música', category: 'entertainment', type: 'external', url: 'https://youtube.com', active: false },
-            { id: 'music', name: 'YouTube Music', icon: '🎵', desc: 'Tu música favorita', category: 'entertainment', type: 'external', url: 'https://music.youtube.com', active: false },
+            { id: 'sports', name: 'Fútbol', svg: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z', desc: 'OneFootball', category: 'entertainment', type: 'external', url: 'https://onefootball.com/en/home', active: true },
+            { id: 'youtube', name: 'YouTube', svg: 'M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z', desc: 'Videos y música', category: 'entertainment', type: 'external', url: 'https://youtube.com', active: false },
+            { id: 'music', name: 'YouTube Music', svg: 'M12 3v9.3l5-2.9V21h-2v-7.5L9 17V3h3zm0-1H8v16l7-4v7h4V9.3L12 4z', desc: 'Tu música favorita', category: 'entertainment', type: 'external', url: 'https://music.youtube.com', active: false },
             
             // Herramientas
-            { id: 'maps', name: 'Google Maps', icon: '🗺️', desc: 'Mapas y navegación', category: 'tools', type: 'external', url: 'https://maps.google.com', active: false },
-            { id: 'photos', name: 'Google Photos', icon: '📸', desc: 'Tus fotos', category: 'tools', type: 'external', url: 'https://photos.google.com', active: false },
-            { id: 'translate', name: 'Traductor', icon: '🌐', desc: 'Google Translate', category: 'tools', type: 'external', url: 'https://translate.google.com', active: false },
+            { id: 'maps', name: 'Google Maps', svg: 'M21 10c0 7-9 13-9 13s-9-6-9-13c0-5 4-9 9-9s9 4 9 9zm-9 3c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4zm0-6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z', desc: 'Mapas y navegación', category: 'tools', type: 'external', url: 'https://maps.google.com', active: false },
+            { id: 'photos', name: 'Google Photos', svg: 'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z', desc: 'Tus fotos', category: 'tools', type: 'external', url: 'https://photos.google.com', active: false },
+            { id: 'translate', name: 'Traductor', svg: 'M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z', desc: 'Google Translate', category: 'tools', type: 'external', url: 'https://translate.google.com', active: false },
         ];
 
         const WIDGET_CATEGORIES = {
@@ -3177,7 +3178,7 @@
                     html += '      <polyline points="20 6 9 17 4 12"></polyline>';
                     html += '    </svg>';
                     html += '  </div>';
-                    html += '  <div class="widget-option-icon">' + widget.icon + '</div>';
+                    html += '  <div class="widget-option-icon"><svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: var(--text-secondary);"><path d="' + widget.svg + '"/></svg></div>';
                     html += '  <div class="widget-option-info">';
                     html += '    <div class="widget-option-name">' + widget.name + '</div>';
                     html += '    <div class="widget-option-desc">' + widget.desc + '</div>';
@@ -3213,7 +3214,7 @@
                 
                 html += '<div class="widget-card" onclick="' + onclickAction + '">';
                 html += '  <div class="widget-icon">';
-                html += '    <div style="font-size: 28px;">' + widget.icon + '</div>';
+                html += '    <svg viewBox="0 0 24 24" class="icon-svg"><path d="' + widget.svg + '"/></svg>';
                 html += '  </div>';
                 html += '  <div class="widget-label">' + widget.name + '</div>';
                 html += '</div>';
