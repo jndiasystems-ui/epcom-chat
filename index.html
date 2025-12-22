@@ -154,6 +154,147 @@
             height: 100%;
         }
 
+        /* Hamburger Menu Button */
+        .hamburger-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            margin-right: 8px;
+        }
+
+        .hamburger-btn:hover {
+            background: var(--tertiary-dark);
+        }
+
+        .hamburger-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Side Menu Overlay */
+        .side-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .side-menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Side Menu */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: var(--secondary-dark);
+            border-right: 1px solid var(--border-color);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            transition: left 0.3s ease;
+            box-shadow: 4px 0 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .side-menu.active {
+            left: 0;
+        }
+
+        .side-menu-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .side-menu-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .side-menu-close {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .side-menu-close:hover {
+            background: var(--tertiary-dark);
+            color: var(--text-primary);
+        }
+
+        .side-menu-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+
+        .side-menu-item {
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-primary);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+        }
+
+        .side-menu-item:hover {
+            background: var(--tertiary-dark);
+        }
+
+        .side-menu-item svg {
+            width: 20px;
+            height: 20px;
+            color: var(--text-secondary);
+        }
+
+        .side-menu-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 8px 20px;
+        }
+
+        .side-menu-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-color);
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
         .user-section {
             display: flex;
             align-items: center;
@@ -1860,6 +2001,15 @@
     <div class="app-container" id="appContainer">
         <!-- Header -->
         <header class="app-header">
+            <!-- Botón Hamburguesa -->
+            <button class="hamburger-btn" onclick="window.toggleSideMenu()" title="Menú">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
             <div class="app-logo">
                 <svg viewBox="0 0 200 200" class="icon-svg" style="width: 38px; height: 38px;">
                     <defs>
@@ -1924,6 +2074,127 @@
                 </div>
             </div>
         </header>
+
+        <!-- Side Menu Overlay -->
+        <div class="side-menu-overlay" id="sideMenuOverlay" onclick="window.closeSideMenu()"></div>
+
+        <!-- Side Menu -->
+        <div class="side-menu" id="sideMenu">
+            <div class="side-menu-header">
+                <span class="side-menu-title">Menú</span>
+                <button class="side-menu-close" onclick="window.closeSideMenu()" title="Cerrar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="side-menu-content">
+                <!-- Google Drive -->
+                <a href="https://drive.google.com" target="_blank" class="side-menu-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span>Google Drive</span>
+                </a>
+
+                <!-- Google Calendar -->
+                <a href="https://calendar.google.com" target="_blank" class="side-menu-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>Google Calendar</span>
+                </a>
+
+                <!-- Google Contacts -->
+                <a href="https://contacts.google.com" target="_blank" class="side-menu-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span>Google Contacts</span>
+                </a>
+
+                <!-- Gmail -->
+                <a href="https://mail.google.com" target="_blank" class="side-menu-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <span>Gmail</span>
+                </a>
+
+                <!-- Google Tasks -->
+                <a href="https://tasks.google.com" target="_blank" class="side-menu-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 11 12 14 22 4"></polyline>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                    </svg>
+                    <span>Google Tasks</span>
+                </a>
+
+                <!-- Google Maps -->
+                <a href="https://maps.google.com" target="_blank" class="side-menu-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <span>Google Maps</span>
+                </a>
+
+                <!-- Google Photos -->
+                <a href="https://photos.google.com" target="_blank" class="side-menu-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                    <span>Google Photos</span>
+                </a>
+
+                <div class="side-menu-divider"></div>
+
+                <!-- Configuración -->
+                <button class="side-menu-item" onclick="alert('Configuración - En desarrollo')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6m0-12l-4.5-2.5m9 0L12 7m0 10l-4.5 2.5m9 0L12 17M1 12h6m6 0h6m-12 0l-2.5-4.5m0 9L7 12m10 0l2.5-4.5m0 9L17 12"></path>
+                    </svg>
+                    <span>Configuración</span>
+                </button>
+
+                <!-- Ayuda -->
+                <button class="side-menu-item" onclick="alert('Ayuda - En desarrollo')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    <span>Ayuda</span>
+                </button>
+
+                <!-- Acerca de -->
+                <button class="side-menu-item" onclick="window.showAboutModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <span>Acerca de Stefy</span>
+                </button>
+            </div>
+
+            <div class="side-menu-footer">
+                Stefy v2.2 - Asistente Personal<br>
+                © 2024 JND AI SYSTEMS
+            </div>
+        </div>
 
         <!-- User dropdown menu -->
         <div class="user-menu" id="userMenu">
@@ -2491,6 +2762,61 @@
 
         function t(key) {
             return translations[currentLanguage][key] || key;
+        }
+
+        // ==========================================
+        // SIDE MENU (Hamburger Menu)
+        // ==========================================
+
+        window.toggleSideMenu = function() {
+            const sideMenu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('sideMenuOverlay');
+            
+            if (sideMenu.classList.contains('active')) {
+                closeSideMenu();
+            } else {
+                sideMenu.classList.add('active');
+                overlay.classList.add('active');
+            }
+        }
+
+        window.closeSideMenu = function() {
+            const sideMenu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('sideMenuOverlay');
+            
+            sideMenu.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        window.showAboutModal = function() {
+            closeSideMenu();
+            const message = `
+╔════════════════════════════════════════╗
+║        🤖 STEFY - ASISTENTE PERSONAL        ║
+╠════════════════════════════════════════╣
+║                                        ║
+║  Versión: 2.2                         ║
+║  Fecha: Diciembre 2024                ║
+║                                        ║
+║  Desarrollado por:                    ║
+║  JND AI SYSTEMS                       ║
+║                                        ║
+║  Funcionalidades:                     ║
+║  ✅ Google Drive Integration          ║
+║  ✅ Google Calendar                   ║
+║  ✅ Google Contacts                   ║
+║  ✅ Recordatorios                     ║
+║  ✅ Chat AI con Claude                ║
+║  ✅ Multi-idioma (ES, EN, HE)         ║
+║                                        ║
+║  Servicios integrados:                ║
+║  • Google News                        ║
+║  • OneFootball                        ║
+║  • Google Finance                     ║
+║                                        ║
+╚════════════════════════════════════════╝
+            `;
+            alert(message);
         }
 
         window.changeLanguage = function (lang) {
